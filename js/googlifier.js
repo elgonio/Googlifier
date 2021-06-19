@@ -13,6 +13,8 @@ const loadModels = async () => {
     await faceapi.loadFaceRecognitionModel(MODEL_URL);
 }
 
+var modelsLoaded = loadModels();
+
 const getCenterPointAndDiameter = (pointsArray) => {
     let totalX = 0;
     let totalY = 0;
@@ -32,7 +34,9 @@ const getCenterPointAndDiameter = (pointsArray) => {
 }
 
 const googlify = async () => {
+    
     console.log('googlifying');
+    await modelsLoaded;
     const input = document.getElementById('inputImg');
     let detections = await faceapi.detectAllFaces(input).withFaceLandmarks().withFaceDescriptors();
     detections = faceapi.resizeResults(detections, SIZE)
@@ -78,7 +82,7 @@ const updateImage = (event) => {
 
 
 window.onload = function () {
-    loadModels();
+    
     const inputImage = document.getElementById('inputImg');
     inputImage.onload = () => {
         const canvas = document.getElementById('outputCanvas');
