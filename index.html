@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Googlifier</title>
+        <script src="./js/dist/face-api.min.js"></script>
+        <script src="./js/googlifier.js" defer></script>
+        <link rel="stylesheet" href="./css/index.css">
+    </head>
+
+    <body class="verticalContainer">
+        <h1>Replace your eyes</h1>
+        <section >
+            <img id="inputImg" src="https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png"
+                crossOrigin='anonymous' width="512" height="512"/>
+            <canvas id="outputCanvas" width="512" height="512" cross></canvas>
+            
+        </section>
+        <button id="submitButton" onclick="googlify">Do the thing</button>
+    </body>
+
+
+</html>
