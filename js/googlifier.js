@@ -7,9 +7,8 @@ const RIGHT_EYE = './assets/right-googly-eye.png';
 const loadModels = async () => {
     console.log(faceapi.nets)
     console.info('Loading models');
-    await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
-    await faceapi.loadFaceLandmarkModel(MODEL_URL);
-    await faceapi.loadFaceRecognitionModel(MODEL_URL);
+    await faceapi.loadTinyFaceDetectorModel(MODEL_URL);
+    await faceapi.loadFaceLandmarkTinyModel(MODEL_URL);
 }
 
 var modelsLoaded = loadModels();
@@ -38,7 +37,8 @@ const googlify = async () => {
     console.log('googlifying');
     await modelsLoaded;
     const input = document.getElementById('inputImg');
-    let detections = await faceapi.detectAllFaces(input).withFaceLandmarks().withFaceDescriptors();
+    const useTinyModel = true;
+    let detections = await faceapi.detectAllFaces(input,new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks(useTinyModel);
     detections = faceapi.resizeResults(detections, SIZE)
     console.log('detected the following faces', detections);
     for (const face of detections) {
