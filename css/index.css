@@ -8,6 +8,12 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+img {
+    width: 512px;
+    max-width: 50vh;
+    height: auto;
+}
+
 .verticalContainer {
     display: flex;
     flex-direction: column;
@@ -50,15 +56,15 @@ body {
 }
 
 .loadingOverlay {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     z-index: 1;
     display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: rgba(16, 16, 16, 0.5);
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
 }
@@ -87,7 +93,6 @@ body {
         flex-direction: column;
         align-items: center;
     }
-
     .flatButton {
         display: flex;
         flex-direction: column;
@@ -102,13 +107,11 @@ body {
         height: 6rem;
         font-size: xx-large;
     }
-
     h1 {
         padding: 2rem 0;
         font-size: 3vh;
         text-align: center;
     }
-
     .imageCard {
         background-color: #FFFDEF;
         padding: 0 1rem 1rem;
@@ -119,5 +122,4 @@ body {
         align-items: center;
         margin: 1rem;
     }
-
 }

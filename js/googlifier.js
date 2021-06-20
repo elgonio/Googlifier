@@ -40,6 +40,11 @@ const googlify = async () => {
     const input = document.getElementById('inputImg');
     const useTinyModel = true;
     let detections = await faceapi.detectAllFaces(input, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks(useTinyModel);
+    if (detections.length === 0) {
+        alert("Sorry but we couldn't find any faces");
+        loadingOverlay.style.display = 'none';
+        return;
+    }
     detections = faceapi.resizeResults(detections, SIZE)
     for (const face of detections) {
         const leftEye = face.landmarks.getLeftEye();
@@ -76,18 +81,23 @@ const updateImage = (event) => {
     }
 }
 
-
+const refreshCanvas = () => {
+    const inputImage = document.getElementById('inputImg');
+    const canvas = document.getElementById('outputCanvas');
+    canvas.height = inputImage.height;
+    canvas.width = inputImage.width;
+    SIZE.height = inputImage.height;
+    SIZE.width = inputImage.width;
+    const context = canvas.getContext('2d');
+    console.log("clearRect")
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(inputImage, 0, 0, canvas.width, canvas.height);
+}
 window.onload = () => {
     const inputImage = document.getElementById('inputImg');
     inputImage.onload = () => {
-        const canvas = document.getElementById('outputCanvas');
-        const context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.drawImage(inputImage, 0, 0, canvas.width, canvas.height);
+        refreshCanvas();
     }
-    const canvas = document.getElementById('outputCanvas');
-    const context = canvas.getContext('2d');
-
-    context.drawImage(inputImage, 0, 0);
+    refreshCanvas();
     document.getElementById('submitButton').onclick = googlify;
 };
