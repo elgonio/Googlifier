@@ -1,6 +1,5 @@
 const MODEL_URL = './js/weights'
 const SIZE = { height: 512, width: 512 };
-const SHARINGAN = 'https://static.wikia.nocookie.net/naruto/images/5/56/Sharingan_Triple.svg';
 const LEFT_EYE = './assets/left-googly-eye.png';
 const RIGHT_EYE = './assets/right-googly-eye.png';
 
@@ -34,7 +33,8 @@ const getCenterPointAndDiameter = (pointsArray) => {
 }
 
 const googlify = async () => {
-    
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    loadingOverlay.style.display = 'flex';
     console.log('googlifying');
     await modelsLoaded;
     const input = document.getElementById('inputImg');
@@ -49,7 +49,7 @@ const googlify = async () => {
         console.log('Center of right eye:', getCenterPointAndDiameter(rightEye));
         drawEyes(getCenterPointAndDiameter(leftEye), getCenterPointAndDiameter(rightEye));
     }
-
+    loadingOverlay.style.display = 'none';
 }
 
 const drawEyes = (leftEye, rightEye) => {

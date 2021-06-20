@@ -9,18 +9,28 @@
     </head>
 
     <body class="verticalContainer">
-        <h1>Replace your eyes with googly eyes</h1>
-        <section>
-            <img id="inputImg" src="https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png"
-                crossOrigin='anonymous' width="512" height="512" />
-            <canvas id="outputCanvas" width="512" height="512" cross></canvas>
-
+        <div class="loadingOverlay" id="loadingOverlay">
+            <div class="loader"></div>
+        </div>
+        <h1 class="pageHeading">Replace your eyes with googly eyes</h1>
+        <section class="horizontalContainer">
+            <section class="imageCard">
+                <h4>Original</h4>
+                <img id="inputImg" src="https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png"
+                    crossOrigin='anonymous' width="512" height="512" />
+            </section>
+            <section class="imageCard">
+                <h4>Improved</h4>
+                <canvas id="outputCanvas" width="512" height="512" cross></canvas>
+            </section>
         </section>
         <form class="verticalContainer">
-            <label for="myfile">Upload your own image:</label>
-            <input type="file" id="myfile" name="myfile" onchange="updateImage(event)">
+            <label for="filePicker" class="flatButton">Upload your own image</label>
+            <input name="filePicker" type="file" id="filePicker" onchange="updateImage(event)" style="display: none;">
+            <label for="submitButton" class="flatButton">Do the thing</label>
+            <button name="submitButton" id="submitButton" type="button" onclick="googlify"
+                style="display: none;"></button>
         </form>
-        <button id="submitButton" onclick="googlify">Do the thing</button>
     </body>
 
 
