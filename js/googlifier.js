@@ -5,10 +5,9 @@ const RIGHT_EYE = './assets/right-googly-eye.png';
 
 
 const loadModels = async () => {
-    console.log(faceapi.nets)
     console.info('Loading models');
-    await faceapi.loadTinyFaceDetectorModel(MODEL_URL);
-    await faceapi.loadFaceLandmarkTinyModel(MODEL_URL);
+    // load models in parallel cause we have a need for speed
+    await Promise.all([faceapi.loadTinyFaceDetectorModel(MODEL_URL), faceapi.loadFaceLandmarkTinyModel(MODEL_URL)])
 }
 
 var modelsLoaded = loadModels();
@@ -24,8 +23,10 @@ const getCenterPointAndDiameter = (pointsArray) => {
         totalX += point.x;
         totalY += point.y;
     }
+    // For the cartoony effect we want our googlified eyes to be bigger than natural eys
     const resizingFactor = 1.25;
     const diameter = (maxX - minX) * resizingFactor;
+    // Adjust the center to the top left since that is the origin when drawing images to canvas
     const averageX = (totalX / pointsArray.length) - diameter / 2;
     const averageY = (totalY / pointsArray.length) - diameter / 2;
     return { averageX, averageY, diameter };
@@ -34,19 +35,15 @@ const getCenterPointAndDiameter = (pointsArray) => {
 const googlify = async () => {
     const loadingOverlay = document.getElementById('loadingOverlay');
     loadingOverlay.style.display = 'flex';
-    console.log('googlifying');
+    // We can't do any inference until our models are loaded
     await modelsLoaded;
     const input = document.getElementById('inputImg');
     const useTinyModel = true;
-    let detections = await faceapi.detectAllFaces(input,new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks(useTinyModel);
+    let detections = await faceapi.detectAllFaces(input, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks(useTinyModel);
     detections = faceapi.resizeResults(detections, SIZE)
-    console.log('detected the following faces', detections);
     for (const face of detections) {
-        console.log(face);
         const leftEye = face.landmarks.getLeftEye();
         const rightEye = face.landmarks.getRightEye();
-        console.log('Center of left eye:', getCenterPointAndDiameter(leftEye));
-        console.log('Center of right eye:', getCenterPointAndDiameter(rightEye));
         drawEyes(getCenterPointAndDiameter(leftEye), getCenterPointAndDiameter(rightEye));
     }
     loadingOverlay.style.display = 'none';
@@ -55,6 +52,7 @@ const googlify = async () => {
 const drawEyes = (leftEye, rightEye) => {
     const canvas = document.getElementById('outputCanvas');
     const context = canvas.getContext('2d');
+    // we use the onload method to ensure that we draw the eyes only when the images have loaded
     const leftEyeImg = new Image;
     leftEyeImg.onload = () => {
         context.drawImage(leftEyeImg, leftEye.averageX, leftEye.averageY, leftEye.diameter, leftEye.diameter);
@@ -76,13 +74,10 @@ const updateImage = (event) => {
         const input = document.getElementById('inputImg');
         input.src = newImage;
     }
-
-
 }
 
 
-window.onload = function () {
-    
+window.onload = () => {
     const inputImage = document.getElementById('inputImg');
     inputImage.onload = () => {
         const canvas = document.getElementById('outputCanvas');
@@ -94,8 +89,5 @@ window.onload = function () {
     const context = canvas.getContext('2d');
 
     context.drawImage(inputImage, 0, 0);
+    document.getElementById('submitButton').onclick = googlify;
 };
-
-
-
-document.getElementById('submitButton').onclick = googlify;
